@@ -1,0 +1,8 @@
+# core — run the experiment and build the chart
+openai
+matplotlib
+
+# optional — only needed to regenerate data/texts/ (scripts/prepare_texts.py):
+#   tokenizers
+#   huggingface_hub
+#   requests

@@ -1,0 +1,15 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# experiment outputs
+results/
+
+# misc
+.DS_Store
