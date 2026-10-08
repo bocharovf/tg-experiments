@@ -1,0 +1,7 @@
+services:
+  needle-in-haystack:
+    build:
+      context: ./experiments/needle-in-haystack
+    image: tg-experiments/needle-in-haystack
+    volumes:
+      - ./experiments/needle-in-haystack/results:/app/results

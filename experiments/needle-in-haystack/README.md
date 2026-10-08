@@ -13,8 +13,12 @@
 
 ## Что нужно на компьютере
 
+Вариант A — локальный Python:
+
 - Python 3.10+ (проверено на 3.14);
 - `pip` (идёт вместе с Python).
+
+Вариант B — только Docker Desktop (см. «Запуск через Docker»).
 
 Больше ничего: стога сена уже лежат в репозитории (`data/texts/`), отдельно
 скачивать их не нужно.
@@ -63,6 +67,35 @@ cp .env.example .env                             # вставь VSELLM_API_KEY
 ```bash
 .venv/Scripts/python scripts/plot.py                 # все results/*.csv -> results/plot.png
 .venv/Scripts/python scripts/plot.py --paths a.csv b.csv --out results/plot.png
+```
+
+## Запуск через Docker
+
+Нужен только Docker Desktop — Python локально ставить не обязательно.
+
+```bash
+# собрать образ
+docker compose build needle-in-haystack
+
+# проверка, что образ собран (без вызовов API)
+docker compose run --rm needle-in-haystack run --model openai/gpt-4o-mini --dry-run
+
+# реальный прогон (ключ — переменной окружения)
+docker compose run --rm -e VSELLM_API_KEY=<ключ> needle-in-haystack \
+  run --model openai/gpt-4o-mini --task both --runs 1
+
+# график
+docker compose run --rm --entrypoint python needle-in-haystack scripts/plot.py
+```
+
+`results/` монтируется на хост через volume, поэтому CSV и `plot.png` появятся
+в `experiments/needle-in-haystack/results/`.
+
+Без compose (просто `docker run`, например для `--dry-run`):
+
+```bash
+docker build -t needle-in-haystack experiments/needle-in-haystack
+docker run --rm needle-in-haystack run --model openai/gpt-4o-mini --dry-run
 ```
 
 ## Сколько это стоит
