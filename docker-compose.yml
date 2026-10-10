@@ -5,3 +5,10 @@ services:
     image: tg-experiments/needle-in-haystack
     volumes:
       - ./experiments/needle-in-haystack/results:/app/results
+
+  llm-anonym:
+    build:
+      context: ./experiments/llm-anonym
+    image: tg-experiments/llm-anonym
+    volumes:
+      - ./experiments/llm-anonym/out:/app/out

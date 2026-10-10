@@ -10,6 +10,7 @@ __pycache__/
 
 # experiment outputs
 results/
+out/
 
 # misc
 .DS_Store
