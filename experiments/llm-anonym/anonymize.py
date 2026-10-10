@@ -8,8 +8,7 @@
 На выходе два PDF:
   - <имя>_redacted.pdf             реквизиты закрыты чёрными полосами («вырезание»);
   - <имя>_format_preserving.pdf    синтетика с сохранённой структурой
-                                   («сохранение формата»), плюс .txt той же версии
-                                   для вставки в LLM.
+                                   («сохранение формата»).
 
 Запуск:
     python anonymize.py --input договор.pdf --output out/
@@ -213,15 +212,13 @@ def main() -> None:
     results = analyze(engine, text, args.score_threshold)
     print(f"найдено сущностей: {len(results)}")
 
-    # отчёт
+    # отчёт в консоль
     c = Counter(r.entity_type for r in results)
-    lines = ["=== найденные сущности ==="]
+    print("=== найденные сущности ===")
     for etype, n in sorted(c.items(), key=lambda kv: -kv[1]):
-        lines.append(f"  {etype}: {n}")
-    lines.append("")
+        print(f"  {etype}: {n}")
     for r in sorted(results, key=lambda r: r.start):
-        lines.append(f"  [{r.entity_type}] {text[r.start:r.end]!r} ({round(float(r.score), 2)})")
-    (out_dir / f"{stem}_report.txt").write_text("\n".join(lines), encoding="utf-8")
+        print(f"  [{r.entity_type}] {text[r.start:r.end]!r} ({round(float(r.score), 2)})")
 
     # вариант 1: вырезание
     red_path = out_dir / f"{stem}_redacted.pdf"
@@ -230,13 +227,9 @@ def main() -> None:
 
     # вариант 2: сохранение формата
     fp = format_preserving(text, results, args.seed)
-    fp_txt = out_dir / f"{stem}_format_preserving.txt"
-    fp_txt.write_text(fp, encoding="utf-8")
     fp_pdf = out_dir / f"{stem}_format_preserving.pdf"
     render_pdf(fp, fp_pdf, FONTS / "DejaVuSans.ttf", FONTS / "DejaVuSans-Bold.ttf")
-    print(f"сохранение формата -> {fp_pdf.name} (+ {fp_txt.name} для вставки в LLM)")
-
-    print(f"отчёт -> {stem}_report.txt")
+    print(f"сохранение формата -> {fp_pdf.name}")
 
 
 if __name__ == "__main__":
