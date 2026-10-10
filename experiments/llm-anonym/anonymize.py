@@ -5,10 +5,11 @@
   - регэкспы — для жёстких форматов (ИНН, КПП, ОГРН, БИК, счета, индексы);
   - NER (spaCy ru + en) — для мягких понятий (ФИО, организации, города, email).
 
-На выходе два файла:
-  - <имя>_redacted.pdf            реквизиты закрыты чёрными полосами («вырезание»);
-  - <имя>_format_preserving.txt   синтетика с сохранённой структурой — её можно
-                                  вставить в LLM («сохранение формата»).
+На выходе два PDF:
+  - <имя>_redacted.pdf             реквизиты закрыты чёрными полосами («вырезание»);
+  - <имя>_format_preserving.pdf    синтетика с сохранённой структурой
+                                   («сохранение формата»), плюс .txt той же версии
+                                   для вставки в LLM.
 
 Запуск:
     python anonymize.py --input договор.pdf --output out/
@@ -106,7 +107,7 @@ def redact_pdf(src: Path, dst: Path, text: str, results) -> int:
                 hits += 1
     for page in doc:
         page.apply_redactions()
-    doc.save(dst)
+    doc.save(dst, garbage=3, deflate=True)
     return hits
 
 
@@ -146,6 +147,43 @@ def format_preserving(text: str, results, seed: int = 42) -> str:
 def pdf_text(path: Path) -> str:
     doc = pymupdf.open(path)
     return "\n".join(page.get_text() for page in doc)
+
+
+FONTS = Path(__file__).resolve().parent / "fonts"
+
+
+def render_pdf(text: str, dst: Path, font_regular: Path, font_bold: Path) -> None:
+    """Перерендер обезличенного текста в PDF (кириллица через DejaVu)."""
+    from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import ParagraphStyle
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+
+    pdfmetrics.registerFont(TTFont("DejaVu", str(font_regular)))
+    pdfmetrics.registerFont(TTFont("DejaVu-Bold", str(font_bold)))
+    pdfmetrics.registerFontFamily("DejaVu", normal="DejaVu", bold="DejaVu-Bold")
+
+    title = ParagraphStyle("t", fontName="DejaVu-Bold", fontSize=15, leading=19,
+                           alignment=TA_CENTER, spaceAfter=8)
+    body = ParagraphStyle("b", fontName="DejaVu", fontSize=11, leading=15,
+                          alignment=TA_JUSTIFY, spaceAfter=5)
+
+    story = []
+    prev_blank = False
+    for i, ln in enumerate(text.split("\n")):
+        s = ln.strip()
+        if not s:
+            if not prev_blank:
+                story.append(Spacer(1, 6))
+            prev_blank = True
+            continue
+        prev_blank = False
+        story.append(Paragraph(s, title if i == 0 else body))
+
+    SimpleDocTemplate(str(dst), pagesize=A4, leftMargin=56, rightMargin=56,
+                      topMargin=50, bottomMargin=50).build(story)
 
 
 # --------------------------------------------------------------------------- main
@@ -192,9 +230,11 @@ def main() -> None:
 
     # вариант 2: сохранение формата
     fp = format_preserving(text, results, args.seed)
-    fp_path = out_dir / f"{stem}_format_preserving.txt"
-    fp_path.write_text(fp, encoding="utf-8")
-    print(f"сохранение формата -> {fp_path.name}")
+    fp_txt = out_dir / f"{stem}_format_preserving.txt"
+    fp_txt.write_text(fp, encoding="utf-8")
+    fp_pdf = out_dir / f"{stem}_format_preserving.pdf"
+    render_pdf(fp, fp_pdf, FONTS / "DejaVuSans.ttf", FONTS / "DejaVuSans-Bold.ttf")
+    print(f"сохранение формата -> {fp_pdf.name} (+ {fp_txt.name} для вставки в LLM)")
 
     print(f"отчёт -> {stem}_report.txt")
 

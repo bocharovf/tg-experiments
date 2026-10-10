@@ -1,3 +1,4 @@
 presidio-analyzer
 pymupdf
+reportlab
 spacy
