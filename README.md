@@ -11,6 +11,8 @@
 
 - [needle-in-haystack](experiments/needle-in-haystack) — «lost in the middle»:
   теряет ли LLM факты в середине длинного контекста. Пост: <https://t.me/technosurvival/54>
+- [llm-anonym](experiments/llm-anonym) — обезличивание договора перед нейросетью:
+  вырезание реквизитов (PDF → PDF) и восстановление по крошкам. Пост: <https://t.me/technosurvival/55>
 
 ## Структура
 
