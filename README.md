@@ -15,6 +15,9 @@
   вырезание реквизитов (PDF → PDF) и восстановление по крошкам. Пост: <https://t.me/technosurvival/55>
 - [ai-medicine](experiments/ai-medicine) — промпт персонального ИИ-медика (материал,
   не код): история болезни → SQLite-поиск → дневник. Пост: <https://t.me/technosurvival/57>
+- [calendar-bridge](experiments/calendar-bridge) — единый календарь занятости:
+  Exchange → телефон (MacroDroid) → Google → Calendly, без доступа к корпоративному API.
+  Пост: <https://t.me/technosurvival/<NNN>>
 
 ## Структура
 

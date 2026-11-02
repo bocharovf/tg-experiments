@@ -1,0 +1,24 @@
+[Unit]
+Description=Calendar Bridge (work calendar -> Google Calendar)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=calendar
+Group=calendar
+WorkingDirectory=/opt/calendar-sync
+Environment=HOME=/opt/calendar-sync
+Environment=PYTHONUNBUFFERED=1
+UMask=0077
+ExecStart=/opt/calendar-sync/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8787 --workers 1 --no-access-log
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/calendar-sync
+
+[Install]
+WantedBy=multi-user.target

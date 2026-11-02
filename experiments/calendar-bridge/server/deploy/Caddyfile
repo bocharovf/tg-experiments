@@ -1,0 +1,11 @@
+# Caddyfile: HTTPS + reverse proxy для API синхронизатора.
+# Замените sync.example.com на свой домен и перезагрузите Caddy.
+
+sync.example.com {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+	}
+	reverse_proxy 127.0.0.1:8787
+}
