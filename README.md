@@ -17,9 +17,9 @@
   не код): история болезни → SQLite-поиск → дневник. Пост: <https://t.me/technosurvival/57>
 - [calendar-bridge](experiments/calendar-bridge) — единый календарь занятости:
   Exchange → телефон (MacroDroid) → Google → Calendly, без доступа к корпоративному API.
-  Пост: <https://t.me/technosurvival/<NNN>>
+  Пост: <https://t.me/technosurvival/58>
 - [heretic](experiments/heretic) — снятие защиты с LLM (abliteration + LoRA DPO):
-  замер refusal rate на Qwen2.5-7B, 60% → 20% за $0.20. Пост: <https://t.me/technosurvival/<NNN>>
+  замер refusal rate на Qwen2.5-7B, 60% → 20% за $0.20. Пост: <https://t.me/technosurvival/60>
 
 ## Структура
 

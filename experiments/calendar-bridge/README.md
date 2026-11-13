@@ -1,6 +1,6 @@
 # Calendar Bridge: рабочий календарь ↔ Google Calendar ↔ Calendly
 
-Пост в канале: https://t.me/technosurvival/<NNN>
+Пост в канале: https://t.me/technosurvival/58
 
 Комплект из трёх частей, которые вместе дают единый календарь занятости:
 
