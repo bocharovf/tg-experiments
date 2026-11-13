@@ -1,0 +1,7 @@
+# DPO-стек — только для S2 (LoRA DPO через Unsloth + TRL).
+# Внимание: unsloth тянет за собой обновление torch (в нашем прогоне 2.8 -> 2.14.1),
+# после чего ломается torchaudio. setup.sh это чинит (`pip uninstall -y torchaudio`).
+unsloth
+trl>=0.12
+peft>=0.13
+bitsandbytes

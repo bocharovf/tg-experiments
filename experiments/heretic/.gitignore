@@ -1,0 +1,25 @@
+# Артефакты эксперимента — не в репозиторий
+results/
+
+# Веса и модели
+models/
+*.safetensors
+*.gguf
+*.bin
+*.pt
+*.pth
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Локальные настройки
+.env
+
+# Внутренние рабочие заметки — не публиковать
+PLAN.md
+LOG.md
+RUNPOD_PLAN.md
+POST_MATERIAL.md
