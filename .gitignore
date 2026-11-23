@@ -17,3 +17,5 @@ out/
 
 # local agent instructions (not for public repo)
 AGENTS.md
+# CocoIndex Code (ccc)
+/.cocoindex_code/
